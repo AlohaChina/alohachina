@@ -1,0 +1,58 @@
+﻿<#@ template debug="true" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="Microsoft.VisualStudio.Shell.Interop" #>
+<#@ assembly name="EnvDTE" #>
+<#@ assembly name="EnvDTE100" #>
+<#@ assembly name="VSLangProj" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#@ import namespace="System.Xml.XPath" #>
+<#@ import namespace="Microsoft.VisualStudio.Shell.Interop" #>
+<#@ import namespace="EnvDTE" #>
+<#@ import namespace="EnvDTE100" #>
+<#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
+<#
+  IServiceProvider serviceProvider = (IServiceProvider)this.Host;
+  EnvDTE.DTE dte = (EnvDTE.DTE) serviceProvider.GetCOMService(typeof(EnvDTE.DTE));
+  var solutionFilePath = dte.Solution.FileName;
+  var directory = new FileInfo(solutionFilePath).DirectoryName;
+
+  var xdoc = XDocument.Load("file:///"+directory+"/Resources/Resource.Common/Caption.resx");
+	
+  var project = dte.Solution.FindProjectItem("Caption.tt").ContainingProject;
+ 
+#>
+using System;
+using System.Resources;
+using System.Threading;
+
+namespace <#=project.Properties.Item("DefaultNamespace").Value#>
+{
+	public class Caption
+	{
+		[ThreadStatic]
+		public static ResourceManager ResourceManager = null;
+
+<#
+		foreach(var element in xdoc.XPathSelectElements(".//data"))
+		{
+#>
+		public static string <#=element.Attribute("name").Value#>
+		{
+			get
+			{
+				return ResourceManager.GetString("<#=element.Attribute("name").Value#>");
+			}
+		}
+<#
+		}
+#>
+	}
+}
