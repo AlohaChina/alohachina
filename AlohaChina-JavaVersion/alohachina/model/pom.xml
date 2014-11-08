@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>me.sample</groupId>
+		<artifactId>alohachina</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<groupId>me.sample.alohachina</groupId>
+	<artifactId>model</artifactId>
+	<name>model</name>
+	<url>http://maven.apache.org</url>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jdk.version>1.8</jdk.version>
+		<junit.version>4.11</junit.version>
+		<spring.data.version>1.7.1.RELEASE</spring.data.version>
+	</properties>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-enforcer-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>enforce</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>1.1.1</version>
+					<executions>
+						<execution>
+							<id>enforce-versions</id>
+							<phase>initialize</phase>
+							<goals>
+								<goal>enforce</goal>
+							</goals>
+							<configuration>
+								<fail>true</fail>
+								<rules>
+									<requireMavenVersion>
+										Some plugin features require a recent Maven runtime to work
+										properly
+										<message>Current version of Maven ${maven.version} required to
+											build the project should be ${project.prerequisites.maven},
+											or higher!</message>
+										<version>[${project.prerequisites.maven},)</version>
+									</requireMavenVersion>
+									<requireJavaVersion>
+										<message>Current JDK version ${java.version} should be
+											${jdk.version}, or higher!</message>
+										<version>${jdk.version}</version>
+									</requireJavaVersion>
+								</rules>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.1</version>
+					<configuration>
+						<source>${jdk.version}</source>
+						<target>${jdk.version}</target>
+						<showWarnings>true</showWarnings>
+						<showDeprecation>true</showDeprecation>
+						<encoding>${project.build.sourceEncoding}</encoding>
+						<!-- configure initial and maximal memory for compiling -->
+						<fork>true</fork>
+						<meminitial>128m</meminitial>
+						<maxmem>512m</maxmem>
+						<compilerArguments>
+							<Xmaxwarns>4000</Xmaxwarns>
+							<Xmaxerrs>100</Xmaxerrs>
+						</compilerArguments>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>
